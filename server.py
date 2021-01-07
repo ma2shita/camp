@@ -98,6 +98,8 @@ parser.add_argument("--port", type=int, default=8000, help="The "
                     "port on which to serve the website.")
 parser.add_argument("--resolution", type=str, default="low", help="The "
                     "video resolution. Can be high, medium, or low.")
+parser.add_argument("--rotation", type=int, default=0, help="The "
+                    "video rotation. Can be set 0, 90, 180, or 270")
 parser.add_argument("--require-login", action="store_true", help="Require "
                     "a password to log in to webserver.")
 parser.add_argument("--use-usb", action="store_true", help="Use a USB "
@@ -125,6 +127,15 @@ if args.resolution in resolutions:
         camera.resolution = resolutions[args.resolution]
 else:
     raise Exception("%s not in resolution options." % args.resolution)
+
+rotations = [0, 90, 180, 270]
+if args.rotation in rotations:
+    if args.use_usb:
+        pass # TODO
+    else:
+        camera.rotation = args.rotation
+else:
+    raise Exception("%s not in rotation options." % args.rotation)
 
 handlers = [(r"/", IndexHandler), (r"/login", LoginHandler),
             (r"/websocket", WebSocket),
